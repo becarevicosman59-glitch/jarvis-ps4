@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="bs">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>J.A.R.V.I.S. — PS4 Interface</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 42%,#082a49 0,#041326 42%,#01050d 100%);color:#b9efff;font-family:Arial,sans-serif;overflow-x:hidden}
+main{max-width:1100px;margin:auto;padding:26px 22px 40px;text-align:center}
+h1{font-weight:300;letter-spacing:.28em;color:#6ee8ff;text-shadow:0 0 18px #00bfff;margin:8px 0 4px;font-size:clamp(30px,5vw,58px)}
+.sub{letter-spacing:.22em;font-size:11px;color:#76b9d4}
+.hud{position:relative;margin:28px auto 18px;width:min(54vw,330px);min-width:210px;aspect-ratio:1;border-radius:50%;display:grid;place-items:center}
+.hud:before,.hud:after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #37dfff;box-shadow:0 0 20px #00bfff,inset 0 0 22px #007ca8;animation:spin 18s linear infinite}
+.hud:after{inset:12%;border-style:dashed;border-color:#a0f4ff;animation-direction:reverse;animation-duration:24s}
+.core{font-size:clamp(54px,10vw,88px);color:#8ff4ff;text-shadow:0 0 24px #00cfff;animation:pulse 2s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{50%{opacity:.55;transform:scale(1.08)}}
+.status{color:#69e6ff;font-size:13px;letter-spacing:.18em;margin:12px}
+.panel{border:1px solid #167fa8;background:#061b2dcc;box-shadow:0 0 18px #00658b55;border-radius:12px;padding:18px;margin:14px auto;max-width:720px}
+#answer{min-height:52px;font-size:19px;line-height:1.5}
+.controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+input{width:min(100%,490px);background:#020d19;color:#e5fbff;border:1px solid #27bde9;border-radius:8px;padding:15px;font-size:17px}
+button{background:#06304b;border:1px solid #39dfff;color:#bff7ff;padding:14px 20px;border-radius:8px;font-size:15px;cursor:pointer}
+button:focus,input:focus{outline:3px solid #a6f5ff;outline-offset:3px}
+button:hover{background:#0b5275}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:720px;margin:14px auto}
+.tile{border:1px solid #14688c;background:#06182a;padding:14px;border-radius:10px;color:#8feaff}
+small{color:#75a9bf}
+@media(max-width:600px){.grid{grid-template-columns:1fr 1fr}.hud{width:220px}}
+</style>
+</head>
+<body><main>
+<h1>J.A.R.V.I.S.</h1><div class="sub">JUST A RATHER VERY INTELLIGENT SYSTEM</div>
+<div class="hud"><div class="core">◉</div></div>
+<div class="status" id="status">SYSTEM ONLINE · READY</div>
+<section class="panel"><div id="answer">Dobro došao. Ja sam JARVIS. Unesi komandu ili izaberi jednu od opcija.</div>
+<div class="controls"><input id="cmd" placeholder="Unesi komandu..." autocomplete="off"><button onclick="runCommand()">POŠALJI</button><button onclick="listen()">🎙 GOVOR</button></div></section>
+<div class="grid">
+<button onclick="runPreset('vrijeme')">VRIJEME</button>
+<button onclick="runPreset('datum')">DATUM</button>
+<button onclick="runPreset('ko si')">IDENTITET</button>
+</div>
+<small>PS4 WEB INTERFACE · DEMO MODE</small>
+</main>
+<script>
+const answer=document.getElementById('answer'),statusEl=document.getElementById('status'),cmd=document.getElementById('cmd');
+function say(t){answer.textContent=t;try{let u=new SpeechSynthesisUtterance(t);u.lang='bs-BA';speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+function runPreset(s){cmd.value=s;runCommand()}
+function runCommand(){let q=cmd.value.trim().toLowerCase();if(!q)return;
+if(q.includes('vrijeme')||q.includes('sat'))say('Trenutno vrijeme je '+new Date().toLocaleTimeString('bs-BA',{hour:'2-digit',minute:'2-digit'}));
+else if(q.includes('datum'))say('Danas je '+new Date().toLocaleDateString('bs-BA'));
+else if(q.includes('ko si')||q.includes('jarvis'))say('Ja sam JARVIS, tvoj digitalni interfejs. Ova verzija radi u demo režimu.');
+else if(q.includes('zdravo')||q.includes('pozdrav'))say('Pozdrav. Sistem je spreman.');
+else say('Primio sam komandu: '+cmd.value+'. Za inteligentne AI odgovore potrebno je povezati siguran online AI servis.');
+statusEl.textContent='SYSTEM ONLINE · COMMAND RECEIVED';}
+function listen(){say('Glasovno upravljanje zavisi od podrške preglednika. Na PS4 mikrofon i prepoznavanje govora možda neće biti podržani.');}
+cmd.addEventListener('keydown',e=>{if(e.key==='Enter')runCommand()});
+</script></body></html>
